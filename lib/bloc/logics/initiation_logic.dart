@@ -40,7 +40,6 @@ class InitiationLogic {
         .withWillTopic(
         'will/notification') // If you set this you must set a will message
         .withWillMessage('$clientName is Disconnected')
-        .startClean() // Non persistent session for testing
         .withWillQos(MqttQos.atLeastOnce);
   }
 

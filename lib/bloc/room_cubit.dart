@@ -38,26 +38,6 @@ class RoomCubit extends Cubit<RoomState> {
                 client: state.client,
                 clientName: state.clientName,
                 status: ConnectionStatus.connected)));
-      } else if (topic == 'chat/+/room') {
-        state.listenerLogic.initiateMqttMessageListener(
-          client: client,
-          chatRooms: state.rooms,
-          clientName: clientName,
-          onChatRoomsUpdated: (
-            chatRooms,
-            client,
-            clientName,
-            status,
-            notification,
-          ) =>
-              emit(RoomState(
-            rooms: chatRooms,
-            client: client,
-            clientName: clientName,
-            status: status,
-            notification: notification,
-          )),
-        );
       }
     };
 
@@ -112,6 +92,25 @@ class RoomCubit extends Cubit<RoomState> {
 
     try {
       await client.connect();
+      state.listenerLogic.initiateMqttMessageListener(
+        client: client,
+        chatRooms: state.rooms,
+        clientName: clientName,
+        onChatRoomsUpdated: (
+            chatRooms,
+            client,
+            clientName,
+            status,
+            notification,
+            ) =>
+            emit(RoomState(
+              rooms: chatRooms,
+              client: client,
+              clientName: clientName,
+              status: status,
+              notification: notification,
+            )),
+      );
     } on NoConnectionException catch (e) {
       print('EXAMPLE::client exception - $e');
       client.disconnect();
